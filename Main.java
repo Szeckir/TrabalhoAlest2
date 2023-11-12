@@ -22,16 +22,11 @@ public class Main {
 
         @Override
         public String toString() {
-            boolean childrens;
-            if (children != null) {
-                childrens = true;
-            } else {
-                childrens = false;
-            }
+            boolean hasChildren = !children.isEmpty();
             
             return "Node:" +
                     " [name='" + name + '\'' +
-                    "], [qtdTerras= " + qtdTerras + "], [children: " + childrens + "]";
+                    "], [qtdTerras= " + qtdTerras + "], [children: " + hasChildren + "]";
         }
 
         public void guerreiroMorreu() {
@@ -78,6 +73,34 @@ public class Main {
         public Node root() {
             return root;
         }
+
+        public Node guerreiroMaisTerras() {
+            if (root == null) {
+                return null;
+            } 
+
+            ArrayList<Node> ultimaGeracao = new ArrayList<>();
+            guerreirosUltimaGeracao(root, ultimaGeracao);
+
+            Node guerreiroMaisTerras = ultimaGeracao.get(0);
+
+            for(int i = 1; i < ultimaGeracao.size(); i++) {
+                if(ultimaGeracao.get(i).qtdTerras > guerreiroMaisTerras.qtdTerras) {
+                    guerreiroMaisTerras = ultimaGeracao.get(i);
+                }
+            }
+            return guerreiroMaisTerras;
+        }
+
+        public void guerreirosUltimaGeracao(Node node, ArrayList<Node> ultimaGeracao) {
+            if(node.children.isEmpty()) {
+                ultimaGeracao.add(node);
+            } else {
+                for(int i =0; i < node.children.size(); i++) {
+                    guerreirosUltimaGeracao(node.children.get(i), ultimaGeracao);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -87,9 +110,9 @@ public class Main {
        tree.root = guerreiro1;
         
        Node guerreiro2 = new Node("bettiol", 100, null);
-       Node guerreiro3 = new Node("Samuca", 200, null);
+       Node guerreiro3 = new Node("Samuca", 30, null);
 
-       Node guerreiro4 = new Node("Lucas", 100, null);
+       Node guerreiro4 = new Node("Lucas", 500, null);
        
        guerreiro1.addChild(guerreiro2);
        guerreiro1.addChild(guerreiro3);
@@ -98,15 +121,16 @@ public class Main {
 
         guerreiro2.conquistaTerra(150);
 
-        System.out.println(tree.isEmpty());
+        //System.out.println(tree.isEmpty());
 
-        guerreiro2.guerreiroMorreu();
         guerreiro1.guerreiroMorreu();
       
 
         for(int i = 0; i < guerreiro1.children.size(); i++) {
             System.out.println(guerreiro1.children.get(i));
         }
+
+        System.out.println("Guerreiro com mais terrs: " + tree.guerreiroMaisTerras());
        
     }
 }
