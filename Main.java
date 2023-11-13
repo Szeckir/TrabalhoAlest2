@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -192,11 +191,13 @@ public class Main {
                         }
                     }
                     line = leituraArquivo.readLine();
-                
             }
         }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        tree.imprimirArvore();
+        System.out.println("Guerreiro com mais terras: " + tree.guerreiroMaisTerras());
     }
 }
