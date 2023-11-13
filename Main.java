@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class Main {
@@ -101,36 +104,110 @@ public class Main {
                 }
             }
         }
+
+        public Node buscarGuerreiro(String nomeGuerreiro) {
+            return buscaRecursiva(nomeGuerreiro, root);
+        }
+
+        public Node buscaRecursiva(String nome, Node node) {
+            if (node == null) {
+                return null;
+            }
+
+            if (node.name == nome) {
+                return node;
+            }
+
+            for (int i = 0; i < node.children.size(); i++) {
+                if (node.children.get(i).name == nome) {
+                    return node.children.get(i);
+                } 
+            }            
+            return null;
+        }
+
+        public boolean hasChildren(Node node) {
+            return !node.children.isEmpty();
+        }
+
+
+        public void imprimirArvore() {
+            imprimirArvoreRecursivo(root, 0);
+        }
+    
+        private void imprimirArvoreRecursivo(Node node, int nivel) {
+            if (node == null) {
+                return;
+            }
+    
+            // Imprime espaços para indentação
+            for (int i = 0; i < nivel * 4; i++) {
+                System.out.print(" ");
+            }
+    
+            // Imprimir o guerreiro atual
+            System.out.println("- " + node.name + " (Terras: " + node.qtdTerras + ")" + hasChildren(node));
+    
+            // Imprimir os filhos deste guerreiro
+            for (int i = 0; i < node.children.size(); i++) {
+                imprimirArvoreRecursivo(node.children.get(i), nivel + 1);
+            }
+        }
+        
     }
 
     public static void main(String[] args) {
        Tree tree = new Tree();
 
-       Node guerreiro1 = new Node("Thomaz", 500, null);
-       tree.root = guerreiro1;
-        
-       Node guerreiro2 = new Node("bettiol", 100, null);
-       Node guerreiro3 = new Node("Samuca", 30, null);
+        String path = "/Users/thomazszeckir/Desktop/Trabalho2Alest/lista.txt";
+        Node raiz = null;
 
-       Node guerreiro4 = new Node("Lucas", 500, null);
-       
-       guerreiro1.addChild(guerreiro2);
-       guerreiro1.addChild(guerreiro3);
-       
-       guerreiro2.addChild(guerreiro4);
+        try {
+            FileReader caminhoArquivo = new FileReader(path);
+            BufferedReader leituraArquivo = new BufferedReader(caminhoArquivo);
 
-        guerreiro2.conquistaTerra(150);
+            String line = leituraArquivo.readLine();
+            while (line != null) {
+                if (tree.root == null) {
+                    String terras = line;
 
-        //System.out.println(tree.isEmpty());
+                    line = leituraArquivo.readLine();
+                    String[] dadosLinha = line.split(" ");
+                    String nome = dadosLinha[0];
+                    raiz = new Node(nome, Integer.parseInt(terras), null);
+                    tree.root = raiz;
+                }
 
-        guerreiro1.guerreiroMorreu();
-      
+                    String[] dadosLinha = line.split(" ");
+                    String nomePai = dadosLinha[0];
+                    String nomeFilho = dadosLinha[1];
+                    int terrasFilho = Integer.parseInt(dadosLinha[2]);
+                    Node filho = new Node(nomeFilho, terrasFilho, null);
 
-        for(int i = 0; i < guerreiro1.children.size(); i++) {
-            System.out.println(guerreiro1.children.get(i));
+                    if (nomePai.equals(raiz.name)) {
+                        raiz.addChild(filho);
+                    } else {
+                        Node pai = tree.buscarGuerreiro(nomePai);
+                        if (pai != null) {
+                        pai.addChild(new Node(nomeFilho, terrasFilho, null)); 
+                        } else {
+                        }
+                    }
+                    line = leituraArquivo.readLine();
+                
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        System.out.println("Guerreiro com mais terrs: " + tree.guerreiroMaisTerras());
-       
+        
+        /* 
+        System.out.println(tree.root);
+        for (Node filho : tree.root.children) {
+            System.out.println("Filho: " + filho.name + ", Terras: " + filho.qtdTerras);
+        }  */      
+
+        tree.imprimirArvore();
+        
     }
 }
