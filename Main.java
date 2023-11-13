@@ -109,27 +109,23 @@ public class Main {
             return buscaRecursiva(nomeGuerreiro, root);
         }
 
-        public Node buscaRecursiva(String nome, Node node) {
-            if (node == null) {
-                return null;
-            }
 
-            if (node.name == nome) {
-                return node;
-            }
+        public Node buscaRecursiva(String nome, Node node) {
 
             for (int i = 0; i < node.children.size(); i++) {
-                if (node.children.get(i).name == nome) {
+                if (node.children.get(i).name.equals(nome)) {
                     return node.children.get(i);
-                } 
-            }            
+                } else if (node.children.get(i).children != null) {
+                    buscaRecursiva(nome, node.children.get(i));
+                }
+            }
+
             return null;
         }
 
         public boolean hasChildren(Node node) {
             return !node.children.isEmpty();
         }
-
 
         public void imprimirArvore() {
             imprimirArvoreRecursivo(root, 0);
@@ -140,17 +136,12 @@ public class Main {
                 return;
             }
     
-            // Imprime espaços para indentação
-            for (int i = 0; i < nivel * 4; i++) {
-                System.out.print(" ");
-            }
-    
             // Imprimir o guerreiro atual
-            System.out.println("- " + node.name + " (Terras: " + node.qtdTerras + ")" + hasChildren(node));
+            System.out.println(" ".repeat(nivel * 4) + "- " + node.name + " (Terras: " + node.qtdTerras + ")");
     
             // Imprimir os filhos deste guerreiro
-            for (int i = 0; i < node.children.size(); i++) {
-                imprimirArvoreRecursivo(node.children.get(i), nivel + 1);
+            for (Node filho : node.children) {
+                imprimirArvoreRecursivo(filho, nivel + 1);
             }
         }
         
@@ -168,7 +159,10 @@ public class Main {
 
             String line = leituraArquivo.readLine();
             while (line != null) {
-                if (tree.root == null) {
+
+                //System.out.println(line);
+
+                if (tree.root == null) { // Criacao do root/raiz
                     String terras = line;
 
                     line = leituraArquivo.readLine();
@@ -176,7 +170,8 @@ public class Main {
                     String nome = dadosLinha[0];
                     raiz = new Node(nome, Integer.parseInt(terras), null);
                     tree.root = raiz;
-                }
+
+                } else {
 
                     String[] dadosLinha = line.split(" ");
                     String nomePai = dadosLinha[0];
@@ -184,30 +179,24 @@ public class Main {
                     int terrasFilho = Integer.parseInt(dadosLinha[2]);
                     Node filho = new Node(nomeFilho, terrasFilho, null);
 
-                    if (nomePai.equals(raiz.name)) {
+                    //System.out.println("Nome pai: " + nomePai + ", Nome filho: " + nomeFilho + ", Terras filho: " + terrasFilho);
+
+                    if (nomePai.equals(raiz.name)) { // Filho do raiz
                         raiz.addChild(filho);
                     } else {
                         Node pai = tree.buscarGuerreiro(nomePai);
                         if (pai != null) {
                         pai.addChild(new Node(nomeFilho, terrasFilho, null)); 
                         } else {
+                            System.out.println("Pai nao encontrado");
                         }
                     }
                     line = leituraArquivo.readLine();
                 
             }
+        }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-        
-        /* 
-        System.out.println(tree.root);
-        for (Node filho : tree.root.children) {
-            System.out.println("Filho: " + filho.name + ", Terras: " + filho.qtdTerras);
-        }  */      
-
-        tree.imprimirArvore();
-        
     }
 }
