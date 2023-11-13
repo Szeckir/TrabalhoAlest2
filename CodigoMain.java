@@ -29,7 +29,5 @@ public class Tests extends Main {
         System.out.println("Guerreiro com mais terrs: " + tree.guerreiroMaisTerras());
 
         System.out.println(tree.buscarGuerreiro("Lucas"));
-
-    
     }
 }

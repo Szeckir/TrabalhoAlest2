@@ -10,6 +10,18 @@ public class Main {
         ArrayList<Node> children;
         boolean alive;
 
+        public String getName() {
+            return name;
+        }
+
+        public int getQtdTerras() {
+            return qtdTerras;
+        }
+
+        public ArrayList<Node> getChildren() {
+            return children;
+        }
+
         public Node(String name, int qtdTerras, ArrayList<Main.Node> children) { // Construtor nodo
             this.name = name;
             this.qtdTerras = qtdTerras;
@@ -64,6 +76,8 @@ public class Main {
     static class Tree { // Criacao da classe arvore
         Node root;
 
+        
+
         public Tree() { // Construtor arvore
             this.root = null;
         }   
@@ -110,15 +124,25 @@ public class Main {
 
 
         public Node buscaRecursiva(String nome, Node node) { 
+            if (node.children.isEmpty()) { // Verifica, se os filhos do raiz estiverem vazios, a unica possibilidade é o nome do raiz ser o procurado
+                if (node.getName().equals(nome)) {
+                    return node;
+                } else {
+                    return null;
+                }
+            }
 
             for (int i = 0; i < node.children.size(); i++) { // Percorre a arvore
                 if (node.children.get(i).name.equals(nome)) { // Verifica se o nome do guerreiro eh igual ao nome passado como parametro, se for igual retorna
                     return node.children.get(i); 
-                } else if (node.children.get(i).children != null) { // Se nao for igual, chama novamente o metodo e verifica os netos e assim por diante
-                    buscaRecursiva(nome, node.children.get(i));
+
+                } else if (node.children.get(i).children.isEmpty() == false) {  // Se nao for igual, chama novamente o metodo e verifica os netos e assim por diante
+                    Node filho = buscaRecursiva(nome, node.children.get(i)); // Cria um Nodo filho e chama o metodo recursivamente para cada filho
+                    if (filho != null) { // Se o filho for diferente de null, retorna o filho
+                        return filho;
+                    }
                 }
             }
-
             return null;
         }
 
@@ -141,13 +165,17 @@ public class Main {
                 imprimirArvoreRecursivo(filho, nivel + 1); // Chama o metodo recursivamente para cada filho
             }
         }
+
+        public Node getRoot() {
+            return root;
+        }
         
     }
 
     public static void main(String[] args) {
        Tree tree = new Tree();
 
-        String path = "/Users/thomazszeckir/Desktop/Trabalho2Alest/lista.txt";
+        String path = "C:/Users/thoma/OneDrive/Área de Trabalho/Alest/TrabalhoAlest2/lista.txt";
         Node raiz = null;
 
         try {
@@ -186,12 +214,15 @@ public class Main {
                     line = leituraArquivo.readLine(); // Le a proxima linha
             }
         }
+                    leituraArquivo.close();
         } catch (Exception e) {
             System.out.println(e.getMessage()); // Excecao
         }
 
+        
         tree.imprimirArvore();
         System.out.println("Guerreiro com mais terras: " + tree.guerreiroMaisTerras());
-        
+
+        System.out.println(tree.buscarGuerreiro("Delscatorflex"));
     }
 }
