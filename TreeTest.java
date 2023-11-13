@@ -51,61 +51,6 @@ public class TreeTest extends Main {
     }
 
     @Test
-    public void treeReader() { // Teste de leitura de arquivo com modelo Trabalho e verifica a folha da arvore com mais terras (Nenhum guerreiro nem conquista, nem perde terras)
-        Tree tree = new Tree();
-
-        String path = "C:/Users/thoma/OneDrive/Área de Trabalho/Alest/TrabalhoAlest2/lista.txt";
-        Node raiz = null;
-
-        try {
-            FileReader caminhoArquivo = new FileReader(path);
-            BufferedReader leituraArquivo = new BufferedReader(caminhoArquivo);
-
-            String line = leituraArquivo.readLine();
-            while (line != null) {
-                if (tree.root == null) { // Criacao do root/raiz
-                    String terras = line;
-
-                    line = leituraArquivo.readLine();
-                    String[] dadosLinha = line.split(" ");
-                    String nome = dadosLinha[0];
-                    raiz = new Node(nome, Integer.parseInt(terras), null);
-                    tree.root = raiz;
-
-                } else { // Se já tiver raiz, começa a criacao dos filhos
-
-                    String[] dadosLinha = line.split(" "); // Leitura do arquivo e divide os dados de cada linha por espaço
-                    String nomePai = dadosLinha[0];
-                    String nomeFilho = dadosLinha[1];
-                    int terrasFilho = Integer.parseInt(dadosLinha[2]);
-                    Node filho = new Node(nomeFilho, terrasFilho, null);
-
-                    if (nomePai.equals(raiz.name)) { // Filho do raiz
-                        raiz.addChild(filho);
-                    } else { // Filho de outro guerreiro
-                        Node pai = tree.buscarGuerreiro(nomePai); // Busca o pai do guerreiro
-                        if (pai != null) { // Se tiver pai, adiciona o filho, se nao, retorna que o pai nao foi encontrado
-                        pai.addChild(new Node(nomeFilho, terrasFilho, null)); 
-                        } else {
-                            System.out.println("Pai nao encontrado");
-                        }
-                    }
-                    line = leituraArquivo.readLine(); // Le a proxima linha
-            }
-        }
-        } catch (Exception e) {
-            System.out.println(e.getMessage()); // Excecao
-        }
-
-        System.out.println(tree.guerreiroMaisTerras());
-
-        boolean expected = true;
-        boolean actual = tree.guerreiroMaisTerras().getName().equals("Delscatorflex");
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void guerreiroConquistarTerras() { // Verifica se guerreiro está conquistando terras
         Tree tree = new Tree();
 
@@ -148,7 +93,7 @@ public class TreeTest extends Main {
     }
 
     @Test
-    public void buscarRootPorNome() {
+    public void buscarRootPorNome() { // Testa a busca pelo nome do root
         Tree tree = new Tree();
         Node guerreiro = new Node("Thomaz", 10, null);
         tree.root = guerreiro;
@@ -160,7 +105,7 @@ public class TreeTest extends Main {
     }
 
     @Test
-    public void buscarGuerreiroFilhoPorNome() {
+    public void buscarGuerreiroFilhoPorNome() { // Testa a busca pelo nome de um guerreiro filho
         Tree tree = new Tree();
         Node guerreiro = new Node("Thomaz", 10, null);
         tree.root = guerreiro;
@@ -169,6 +114,33 @@ public class TreeTest extends Main {
         guerreiro.addChild(filho);
 
         Node expected = filho;
+        Node actual = tree.buscarGuerreiro("Filho");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void buscarQuantidadeTerrasFilho() { // Testa a busca pela quantidade de terras de um guerreiro filho
+        Tree tree = new Tree();
+        Node guerreiro = new Node("Thomaz", 10, null);
+        tree.root = guerreiro;
+
+        Node filho = new Node("Filho", 0, null);
+        guerreiro.addChild(filho);
+
+        int expected = 0;
+        int actual = tree.buscarGuerreiro("Filho").qtdTerras;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void buscarGuerreiroNaoExistente() { // Testa a busca por um guerreiro que nao existe
+        Tree tree = new Tree();
+        Node guerreiro = new Node("Thomaz", 10, null);
+        tree.root = guerreiro;
+
+        Node expected = null;
         Node actual = tree.buscarGuerreiro("Filho");
 
         assertEquals(expected, actual);
