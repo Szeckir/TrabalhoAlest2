@@ -5,7 +5,7 @@ public class CodigoMain extends Main {
     public static void main(String[] args) {
         Tree tree = new Tree();
 
-        String path = "C:/Users/thoma/OneDrive/Área de Trabalho/Alest/TrabalhoAlest2/lista.txt";
+        String path = "lista.txt";
         Node raiz = null;
 
         try {

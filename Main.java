@@ -10,6 +10,13 @@ public class Main {
         ArrayList<Node> children;
         boolean alive;
 
+        public Node(String name, int qtdTerras, ArrayList<Main.Node> children) { // Construtor nodo
+            this.name = name;
+            this.qtdTerras = qtdTerras;
+            this.children = new ArrayList<>();
+            this.alive = true;
+        }
+
         public String getName() {
             return name;
         }
@@ -22,15 +29,7 @@ public class Main {
             return children;
         }
 
-        public Node(String name, int qtdTerras, ArrayList<Main.Node> children) { // Construtor nodo
-            this.name = name;
-            this.qtdTerras = qtdTerras;
-            this.children = new ArrayList<>();
-            this.alive = true;
-        }
-
         public void addChild(Node node) { // Adicionar um filho ao Guerreiro
-            //node.children = null;
             children.add(node);
         }
 
@@ -75,8 +74,6 @@ public class Main {
 
     static class Tree { // Criacao da classe arvore
         Node root;
-
-        
 
         public Tree() { // Construtor arvore
             this.root = null;
@@ -165,11 +162,6 @@ public class Main {
                 imprimirArvoreRecursivo(filho, nivel + 1); // Chama o metodo recursivamente para cada filho
             }
         }
-
-        public Node getRoot() {
-            return root;
-        }
-        
     }
 
     public static void main(String[] args) {
