@@ -63,10 +63,16 @@ public class Main {
         }
 
         public void conquistaTerra(int terras) { // Metodo guerreiro conquistar terras
+            if (terras <= 0) {
+                return;
+            }
             qtdTerras += terras;
         }
 
         public void perdeTerra(int terras) { // Metodo guerreiro perder terras
+            if (terras <= 0) {
+                return;
+            }
             qtdTerras -= terras;
         }
     } 
@@ -105,7 +111,7 @@ public class Main {
             return guerreiroMaisTerras;
         }
 
-        public void guerreirosUltimaGeracao(Node node, ArrayList<Node> ultimaGeracao) { // Metodo que retorna os guerreiros sem filhos
+        private void guerreirosUltimaGeracao(Node node, ArrayList<Node> ultimaGeracao) { // Metodo que retorna os guerreiros sem filhos
             if(node.children.isEmpty()) { // Verifica se o guerreiro possui filhos
                 ultimaGeracao.add(node); // Se for true (nao tem filhos), adiciona o guerreiro na lista
             } else { // Se for false (tem filhos), chama o metodo recursivamente para cada filho
@@ -120,7 +126,7 @@ public class Main {
         }
 
 
-        public Node buscaRecursiva(String nome, Node node) { 
+        private Node buscaRecursiva(String nome, Node node) { 
             if (node.children.isEmpty()) { // Verifica, se os filhos do raiz estiverem vazios, a unica possibilidade é o nome do raiz ser o procurado
                 if (node.getName().equals(nome)) {
                     return node;

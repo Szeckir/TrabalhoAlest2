@@ -145,4 +145,29 @@ public class TreeTest extends Main {
 
         assertEquals(expected, actual);
     }
+
+    // Crie mais alguns exemplos de testes
+    @Test
+    public void buscarGuerreiroComMaisTerras() { // Testa a busca pelo guerreiro com mais terras
+        Tree tree = new Tree();
+
+        Node guerreiro1 = new Node("Thomaz", 500, null);
+        Node guerreiro2 = new Node("Samuel", 300, null);
+        Node guerreiro3 = new Node("Julia", 100, null);
+
+        tree.root = guerreiro1;
+
+        guerreiro1.addChild(guerreiro2);
+        guerreiro2.addChild(guerreiro3);
+
+        guerreiro1.conquistaTerra(100);
+        guerreiro1.perdeTerra(200);
+        guerreiro1.guerreiroMorreu();
+
+        Node expected = guerreiro3;
+        Node actual = tree.guerreiroMaisTerras();
+
+        assertEquals(expected, actual);
+    }
+
 }
